@@ -121,7 +121,7 @@ const MediaView = ({
     }
     fetchMedia();
     
-  }, [config, path]);
+  }, [config, path, mediaConfig.name]); // Added mediaConfig.name
 
   const handleUpload = useCallback((entry: any) => {
     setData((prevData) => {

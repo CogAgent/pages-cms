@@ -71,11 +71,13 @@ export function RepoSelect({
         );
         if (!response.ok) throw new Error(`Failed to fetch repos: ${response.status} ${response.statusText}`);
   
-        const data = await response.json();
-  
-        if (data.status !== "success") throw new Error(data.message);
-  
-        setResults(data.data);
+        // Explicitly type the expected response structure
+        type ApiResponse = { status: string; message?: string; data?: any[] };
+        const data = await response.json() as ApiResponse;
+
+        if (data.status !== "success") throw new Error(data.message || "API error");
+
+        setResults(data.data ?? []); // Ensure data.data is an array
       } catch (error: any) {
         if (error.name !== "AbortError") {
           console.error(error);

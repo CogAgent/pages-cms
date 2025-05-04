@@ -88,7 +88,7 @@ const RepoNav = ({
       settingsItem,
       collaboratorsItem
     ].filter(Boolean);
-  }, [config]);
+  }, [config, user?.githubId]); // Added user?.githubId
 
   if (!items.length) return null;
 
