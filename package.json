@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "wrangler d1 migrations apply pages-cms-db && npx @cloudflare/next-on-pages",
+    "build": "npx wrangler d1 migrations apply pages-cms-db && npx @cloudflare/next-on-pages",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "npx drizzle-kit generate",
@@ -107,6 +107,7 @@
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5",
     "uninstall": "^0.0.0",
-    "vercel": "^41.7.0"
+    "vercel": "^41.7.0",
+    "wrangler": "^4.14.1"
   }
 }
