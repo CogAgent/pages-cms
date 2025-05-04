@@ -246,9 +246,11 @@ export function CollectionView({
 
           if (data.status !== "success") throw new Error(data.message || "API Error");
 
-          setData(data.data.contents);
+          // Use optional chaining and nullish coalescing for safety
+          setData(data.data?.contents ?? []);
 
-          if (data.data.errors && data.data.errors.length > 0) {
+          // Use optional chaining before accessing errors
+          if (data.data?.errors && data.data.errors.length > 0) {
             data.data.errors.forEach((error: any) => toast.error(error));
           }
         } catch (error: any) {
