@@ -8,7 +8,8 @@ import * as schema from './schema';
 // to your Next.js app via @cloudflare/next-on-pages or similar.
 // It might be via `process.env`, context, or passed during initialization.
 // Placeholder: Assuming it's accessible via `process.env.DB` (this might need adjustment)
-const d1 = process.env.DB as D1Database;
+// Cast to unknown first to satisfy TypeScript when Cloudflare injects the binding object
+const d1 = process.env.DB as unknown as D1Database;
 
 // Basic check to ensure the binding is present at runtime
 if (!d1) {
