@@ -8,7 +8,7 @@ export default defineConfig({
   schema: "./db/schema.ts",
   out: "./db/migrations",
   dialect: "sqlite", // D1 uses the SQLite dialect
-  driver: "d1",      // Specify the d1 driver for drizzle-kit
+  driver: "d1-http", // Specify the d1-http driver for drizzle-kit via API
 
   // By omitting wranglerConfigPath and providing dbName,
   // drizzle-kit will expect Cloudflare API credentials via environment variables
