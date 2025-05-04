@@ -9,12 +9,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "postbuild": "npm run db:migrate",
+    "build": "wrangler d1 migrations apply pages-cms-db && npx @cloudflare/next-on-pages",
     "start": "next start",
     "lint": "next lint",
     "db:generate": "npx drizzle-kit generate",
-    "db:migrate": "npx drizzle-kit migrate",
+    "db:migrate:local": "wrangler d1 migrations apply pages-cms-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply pages-cms-db",
     "db:clear-cache": "npx tsx db/scripts/clear-cache.ts"
   },
   "dependencies": {
@@ -28,7 +28,6 @@
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@hookform/resolvers": "^3.4.2",
-    "@libsql/client": "^0.8.1",
     "@ltd/j-toml": "^1.38.0",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
     "@next/env": "^14.2.4",
@@ -94,6 +93,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.12",
+    "@cloudflare/workers-types": "^4.20240423.0",
     "@types/node": "^20.12.8",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
@@ -105,6 +106,7 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5",
-    "uninstall": "^0.0.0"
+    "uninstall": "^0.0.0",
+    "vercel": "^41.7.0"
   }
 }

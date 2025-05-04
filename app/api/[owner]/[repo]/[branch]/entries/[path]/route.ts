@@ -67,7 +67,7 @@ export async function GET(
       throw new Error("Invalid response type");
     }
 
-    const content = Buffer.from(response.data.content, "base64").toString();
+    const content = atob(response.data.content);
     const contentObject = name
       ? parseContent(content, schema, config)
       : { body: content };

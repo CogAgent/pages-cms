@@ -1,15 +1,23 @@
-import "@/db/envConfig";
+// import "@/db/envConfig"; // Not needed for drizzle-kit config
 import { defineConfig } from "drizzle-kit";
+
+// The D1 database name (must match the binding name in wrangler.toml and Cloudflare dashboard)
+const d1DatabaseName = "pages-cms-db";
 
 export default defineConfig({
   schema: "./db/schema.ts",
   out: "./db/migrations",
-  dialect: "sqlite",
-  driver: (process.env.SQLITE_AUTH_TOKEN && process.env.SQLITE_AUTH_TOKEN !== "")
-    ? ("turso" as const)
-    : (undefined as any),
+  dialect: "sqlite", // D1 uses the SQLite dialect
+  driver: "d1",      // Specify the d1 driver for drizzle-kit
+
+  // By omitting wranglerConfigPath and providing dbName,
+  // drizzle-kit will expect Cloudflare API credentials via environment variables
+  // (CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID)
+  // to interact with the D1 database for migrations/generation.
   dbCredentials: {
-    url: process.env.SQLITE_URL!,
-    authToken: process.env.SQLITE_AUTH_TOKEN,
-  }
+    dbName: d1DatabaseName,
+  },
+  // Optionally, add verbose and strict flags for drizzle-kit
+  // verbose: true,
+  // strict: true,
 });

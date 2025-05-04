@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
-import crypto from "crypto";
+// Replace Node.js crypto with Web Crypto API for HMAC verification
+// import crypto from "crypto"; 
 import { db } from "@/db";
 import { collaboratorTable, githubInstallationTokenTable } from "@/db/schema";
 import { eq, inArray } from "drizzle-orm";
@@ -27,9 +28,23 @@ export async function POST(request: Request) {
   try {
     const signature = request.headers.get("X-Hub-Signature-256");
     const body = await request.text();
-    const hmac = crypto.createHmac("sha256", process.env.GITHUB_APP_WEBHOOK_SECRET!);
-    const digest = `sha256=${hmac.update(body).digest("hex")}`;
-
+    
+    // Verify signature using Web Crypto API
+    const secret = process.env.GITHUB_APP_WEBHOOK_SECRET!;
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(secret);
+    const key = await crypto.subtle.importKey(
+      "raw",
+      keyData,
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign"]
+    );
+    const bodyData = encoder.encode(body);
+    const signatureBuffer = await crypto.subtle.sign("HMAC", key, bodyData);
+    const signatureArray = Array.from(new Uint8Array(signatureBuffer));
+    const digest = `sha256=${signatureArray.map(b => b.toString(16).padStart(2, '0')).join('')}`;
+    
     if (signature !== digest) throw new Error("Invalid signature");
 
     const data = JSON.parse(body);

@@ -102,9 +102,9 @@ export async function POST(
                 delimiters: schema.delimiters
               }
             );
-            contentBase64 = Buffer.from(stringifiedContentObject).toString("base64");
+            contentBase64 = btoa(stringifiedContentObject);
           } else {
-            contentBase64 = Buffer.from(data.content.body ?? "").toString("base64");
+            contentBase64 = btoa(data.content.body ?? "");
           }
         }
         break;
@@ -168,7 +168,7 @@ export async function POST(
           type: data.sha ? 'modify' : 'add',
           path: response.data.content.path!,
           sha: response.data.content.sha!,
-          content: Buffer.from(contentBase64, 'base64').toString('utf-8'),
+          content: atob(contentBase64),
           size: response.data.content.size,
           downloadUrl: response.data.content.download_url,
           commit: {
