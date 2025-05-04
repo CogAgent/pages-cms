@@ -106,9 +106,10 @@ const MediaView = ({
           const response = await fetch(`/api/${config.owner}/${config.repo}/${encodeURIComponent(config.branch)}/media/${encodeURIComponent(mediaConfig.name)}/${encodeURIComponent(path)}`);
           if (!response.ok) throw new Error(`Failed to fetch media: ${response.status} ${response.statusText}`);
 
-          const data: any = await response.json();
+          // Type assertion for API response
+          const data = await response.json() as { status: string; message?: string; data?: any[] };
           
-          if (data.status !== "success") throw new Error(data.message);
+          if (data.status !== "success") throw new Error(data.message || "API Error");
           
           setData(data.data);
         } catch (error: any) {

@@ -19,7 +19,8 @@ export const createOctokitInstance = (token: string) => {
           // Only attempt to log out on a 401 status
           if (response.status === 401) {
             try {
-              const data = await response.json();
+              // Type assertion for the error response
+              const data = await response.json() as { message?: string };
               if (data.message === "Bad credentials") {
                 // If the user revoked access, sign them out
                 await handleSignOut();

@@ -241,9 +241,10 @@ export function CollectionView({
           const response = await fetch(`/api/${config.owner}/${config.repo}/${encodeURIComponent(config.branch)}/collections/${encodeURIComponent(name)}?path=${encodeURIComponent(path || schema.path)}`);
           if (!response.ok) throw new Error(`Failed to fetch collection: ${response.status} ${response.statusText}`);
 
-          const data: any = await response.json();
+          // Type assertion for API response
+          const data = await response.json() as { status: string; message?: string; data?: { contents: any[], errors?: string[] } };
 
-          if (data.status !== "success") throw new Error(data.message);
+          if (data.status !== "success") throw new Error(data.message || "API Error");
 
           setData(data.data.contents);
 

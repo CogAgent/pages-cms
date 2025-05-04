@@ -110,9 +110,10 @@ export function EntryEditor({
           const response = await fetch(`/api/${config.owner}/${config.repo}/${encodeURIComponent(config.branch)}/entries/${encodeURIComponent(path)}?name=${encodeURIComponent(name)}`);
           if (!response.ok) throw new Error(`Failed to fetch entry: ${response.status} ${response.statusText}`);
 
-          const data: any = await response.json();
+          // Type assertion for API response
+          const data = await response.json() as { status: string; message?: string; data?: any };
           
-          if (data.status !== "success") throw new Error(data.message);
+          if (data.status !== "success") throw new Error(data.message || "API Error");
           
           setEntry(data.data);
           setSha(data.data.sha);
@@ -140,9 +141,10 @@ export function EntryEditor({
           const response = await fetch(`/api/${config.owner}/${config.repo}/${encodeURIComponent(config.branch)}/entries/${encodeURIComponent(path)}/history?name=${encodeURIComponent(name)}`);
           if (!response.ok) throw new Error(`Failed to fetch entry's history: ${response.status} ${response.statusText}`);
           
-          const data: any = await response.json();
+          // Type assertion for API response
+          const data = await response.json() as { status: string; message?: string; data?: any[] };
           
-          if (data.status !== "success") throw new Error(data.message);
+          if (data.status !== "success") throw new Error(data.message || "API Error");
           
           setHistory(data.data);
         } catch (error: any) {
@@ -172,9 +174,10 @@ export function EntryEditor({
           }),
         });
         if (!response.ok) throw new Error(`Failed to save file: ${response.status} ${response.statusText}`);
-        const data: any = await response.json();
+        // Type assertion for API response
+        const data = await response.json() as { status: string; message?: string; data?: any };
       
-        if (data.status !== "success") throw new Error(data.message);
+        if (data.status !== "success") throw new Error(data.message || "API Error");
         
         if (data.data.sha !== sha) setSha(data.data.sha);
 

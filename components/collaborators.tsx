@@ -60,9 +60,10 @@ export function Collaborators({
 
         if (!response.ok) throw new Error(`Failed to fetch collection: ${response.status} ${response.statusText}`);
 
-        const data: any = await response.json();
+        // Type assertion for API response
+        const data = await response.json() as { status: string; message?: string; data?: { errors?: string[] } & any[] };
 
-        if (data.status !== "success") throw new Error(data.message);
+        if (data.status !== "success") throw new Error(data.message || "API Error");
 
         setCollaborators(data.data);
 

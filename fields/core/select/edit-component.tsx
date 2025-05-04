@@ -118,7 +118,8 @@ const EditComponent = forwardRef((props: any, ref: any) => {
           headers: fetchConfig.headers || {},
         });
         if (!response.ok) throw new Error("Fetch failed");
-        const data = await response.json();
+        // Type assertion for the JSON response
+        const data = await response.json() as Record<string, any> | any[]; 
         const results = fetchConfig.results ? safeAccess(data, fetchConfig.results) : data;
         if (!Array.isArray(results)) return [];
         return results.map((item: any) => ({

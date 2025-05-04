@@ -80,11 +80,12 @@ export function FileOptions({
             method: "DELETE",
           });
 
-          const data: any = await response.json();
+          // Type assertion for API response
+          const data = await response.json() as { status?: string; message?: string };
 
           if (!response.ok) throw new Error(data.message || `Failed to delete file: ${response.status} ${response.statusText}`);
 
-          if (data.status !== "success") throw new Error(data.message);
+          if (data.status !== "success") throw new Error(data.message || "API Error");
 
           resolve(data);
         } catch (error) {
@@ -123,9 +124,10 @@ export function FileOptions({
           });
           if (!response.ok) throw new Error(`Failed to rename file: ${response.status} ${response.statusText}`);
 
-          const data: any = await response.json();
+          // Type assertion for API response
+          const data = await response.json() as { status: string; message?: string; data?: any };
 
-          if (data.status !== "success") throw new Error(data.message);
+          if (data.status !== "success") throw new Error(data.message || "API Error");
 
           resolve(data);
         } catch (error) {

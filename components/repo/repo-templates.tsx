@@ -68,7 +68,8 @@ export function RepoTemplates({ defaultAccount }: { defaultAccount?: any }) {
           await new Promise(resolve => setTimeout(resolve, 1000));
           const response = await fetch(`/api/${copyTemplateState.data.owner}/${copyTemplateState.data.repo}/main/entries/.pages.yml`);
           if (response.ok) {
-            const data: any = await response.json();
+            // Type assertion for API response
+            const data = await response.json() as { status: string; message?: string; data?: any };
             if (data.status === "success") resolve(response);
           }
           attempt++;
