@@ -65,9 +65,11 @@ export function Collaborators({
 
         if (data.status !== "success") throw new Error(data.message || "API Error");
 
-        setCollaborators(data.data);
+        // Ensure data.data is an array before setting state
+        setCollaborators(Array.isArray(data.data) ? data.data : []);
 
-        if (data.data.errors && data.data.errors.length > 0) {
+        // Check if errors exist on data.data before accessing
+        if (data.data?.errors && data.data.errors.length > 0) {
           data.data.errors.forEach((error: any) => toast.error(error));
         }
       } catch (error: any) {
