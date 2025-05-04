@@ -82,9 +82,16 @@ function MediaUploadRoot({ children, path, onUpload, media, extensions, multiple
 
               if (!response.ok) throw new Error(`Failed to upload file: ${response.status} ${response.statusText}`);
 
-              const data = await response.json();
-              if (data.status !== "success") throw new Error(data.message);
-              
+              // Explicitly type the expected response structure
+              type ApiResponse = { status: string; message?: string; data?: any };
+              const data = await response.json() as ApiResponse; // Type assertion
+
+              // Check if status exists and is not "success"
+              if (!data || data.status !== "success") {
+                // Throw error with message if available, otherwise a generic error
+                throw new Error(data?.message || "Upload failed with unknown error");
+              }
+
               resolve(data);
             } catch (error) {
               reject(error);
